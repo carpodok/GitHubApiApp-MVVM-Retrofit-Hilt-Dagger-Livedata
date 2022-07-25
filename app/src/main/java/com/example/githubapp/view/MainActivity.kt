@@ -2,9 +2,12 @@ package com.example.githubapp.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var avatarImageView: CircleImageView
     private lateinit var userNameTextInputLayout: TextInputLayout
     private lateinit var searchBtn: Button
+    private lateinit var viewModel: MainActivityViewModel
+    private lateinit var pb: ProgressBar
 
     private var userName = ""
 
@@ -38,6 +43,10 @@ class MainActivity : AppCompatActivity() {
         avatarImageView = binding.userAvatarImageView
         userNameTextInputLayout = binding.userNameET
         searchBtn = binding.searchBtn
+        pb = binding.progressBar
+
+        rv = binding.recyclerView
+        rv.layoutManager = LinearLayoutManager(this)
 
         searchBtn.setOnClickListener {
 
@@ -45,6 +54,12 @@ class MainActivity : AppCompatActivity() {
 
             Log.d(TAG, "onCreate: $userName")
             if (userName.isNotEmpty()) {
+
+                rv.visibility = View.INVISIBLE
+                avatarImageView.visibility = View.INVISIBLE
+
+                pb.visibility = View.VISIBLE
+
                 initViewModel()
             } else {
                 Snackbar.make(
@@ -55,38 +70,61 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        rv = binding.recyclerView
-        rv.layoutManager = LinearLayoutManager(this)
 
     }
 
     private fun initViewModel() {
 
-        val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
+        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
+
+        viewModel.loadData(userName)
+
+        observeData()
+
+    }
+
+    private fun observeData() {
 
         viewModel.getLiveData().observe(this) {
 
+            pb.visibility = View.INVISIBLE
+
             if (it != null) {
                 if (it.isEmpty()) {
+
+                    rv.visibility = View.INVISIBLE
+                    avatarImageView.visibility = View.INVISIBLE
+
+
                     Snackbar.make(
                         searchBtn,
                         "$userName has no repository",
                         Snackbar.LENGTH_SHORT
                     ).show()
+                } else {
+
+                    rv.visibility = View.VISIBLE
+                    avatarImageView.visibility = View.VISIBLE
+
+
+                    adapter = RecyclerViewAdapter(this, it)
+                    rv.adapter = adapter
+                    adapter.notifyDataSetChanged()
+
+
+                    Glide
+                        .with(this)
+                        .load(it[0].owner.avatar_url)
+                        .centerCrop()
+                        .into(avatarImageView)
+
                 }
 
-                adapter = RecyclerViewAdapter(this, it)
-                rv.adapter = adapter
-                adapter.notifyDataSetChanged()
-
-                Glide
-                    .with(this)
-                    .load(it[0].owner.avatar_url)
-                    .centerCrop()
-                    .into(avatarImageView)
-
-
             } else {
+                rv.visibility = View.INVISIBLE
+                avatarImageView.visibility = View.INVISIBLE
+
+
                 Snackbar.make(
                     searchBtn,
                     "There is no user named $userName",
@@ -94,8 +132,6 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
-
-        viewModel.loadData(userName)
 
     }
 
