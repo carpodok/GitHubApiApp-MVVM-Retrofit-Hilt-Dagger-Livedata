@@ -11,7 +11,7 @@
 
 :white_check_mark: Checks the edit text if it's emty or not. And if it's empty, gives a warning message with <a href="https://material.io/components/snackbars/android" > Snackbars </a>
 
-:white_check_mark: If the user typed in edit text does not exist, gives a error message with Snack Bars
+:white_check_mark: If the user typed in edit text does not exist, gives a error message with Snackbars
 
 <hr>
 
