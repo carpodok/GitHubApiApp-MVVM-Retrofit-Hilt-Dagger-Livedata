@@ -1,4 +1,4 @@
-# :octocat: GitHubApiApp-MVVM-Retrofit-Hilt-Dagger :octocat:
+# :octocat: GitHubApiApp-MVVM-Retrofit-Hilt-Dagger-Livedata :octocat:
 <b> :balloon: I built this project to demonstrate integration of <a href="https://dagger.dev/hilt/">Hilt-Dagger</a>  and <a href="https://square.github.io/retrofit/">Retrofit </a>  with<a href="https://developer.android.com/topic/architecture?gclid=Cj0KCQjw2_OWBhDqARIsAAUNTTFX0OhEUlnWR9sJsucStPuseSr0-1J3KZaOGf1VT1dFn-MBO-F9iqoaArUiEALw_wcB&gclsrc=aw.ds"> MVVM </a> architecture. </b>
 
 <hr>
