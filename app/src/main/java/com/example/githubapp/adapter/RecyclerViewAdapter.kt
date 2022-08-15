@@ -8,15 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubapp.R
 import com.example.githubapp.model.Repo
 
 
 class RecyclerViewAdapter(
-    private val context: Context,
-    private val dataList: List<Repo>
+    dataList: List<Repo>
 ) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
@@ -40,15 +38,15 @@ class RecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = list[position]
 
-        holder.name.text = data.name
+        holder.name.text = data.repoName
         holder.name.paintFlags = holder.name.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
         holder.name.setOnClickListener {
-            goToWebsiteWithUrl(data.html_url)
+            goToWebsiteWithUrl(data.htmlUrl, it.context)
         }
     }
 
-    private fun goToWebsiteWithUrl(url: String) {
+    private fun goToWebsiteWithUrl(url: String, context: Context) {
 
         val properURL = getProperUrl(url)
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(properURL))

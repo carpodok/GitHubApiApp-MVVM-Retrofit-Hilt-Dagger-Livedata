@@ -24,5 +24,4 @@ class MainRepository @Inject constructor(
             }
         })
     }
-
 }

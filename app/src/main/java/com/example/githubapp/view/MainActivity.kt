@@ -25,13 +25,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var rv: RecyclerView
     private lateinit var adapter: RecyclerViewAdapter
-    private lateinit var avatarImageView: CircleImageView
-    private lateinit var userNameTextInputLayout: TextInputLayout
-    private lateinit var searchBtn: Button
     private lateinit var viewModel: MainActivityViewModel
-    private lateinit var pb: ProgressBar
 
     private var userName = ""
 
@@ -40,15 +35,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        avatarImageView = binding.userAvatarImageView
-        userNameTextInputLayout = binding.userNameET
-        searchBtn = binding.searchBtn
-        pb = binding.progressBar
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
-        rv = binding.recyclerView
-        rv.layoutManager = LinearLayoutManager(this)
-
-        searchBtn.setOnClickListener {
+        binding.searchBtn.setOnClickListener {
 
             val view = this.currentFocus
             if (view != null) {
@@ -57,15 +46,15 @@ class MainActivity : AppCompatActivity() {
                 imm.hideSoftInputFromWindow(view.windowToken, 0)
             }
 
-            userName = userNameTextInputLayout.editText?.text.toString()
+            userName = binding.userNameET.editText?.text.toString()
 
             Log.d(TAG, "onCreate: $userName")
             if (userName.isNotEmpty()) {
 
-                rv.visibility = View.INVISIBLE
-                avatarImageView.visibility = View.INVISIBLE
+                binding.recyclerView.visibility = View.INVISIBLE
+                binding.userAvatarImageView.visibility = View.INVISIBLE
 
-                pb.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.VISIBLE
 
                 initViewModel()
             } else {
@@ -76,8 +65,6 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
-
-
     }
 
     private fun initViewModel() {
@@ -94,46 +81,46 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getLiveData().observe(this) {
 
-            pb.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.INVISIBLE
 
             if (it != null) {
                 if (it.isEmpty()) {
 
-                    rv.visibility = View.INVISIBLE
-                    avatarImageView.visibility = View.INVISIBLE
+                    binding.recyclerView.visibility = View.INVISIBLE
+                    binding.userAvatarImageView.visibility = View.INVISIBLE
 
 
                     Snackbar.make(
-                        searchBtn,
+                        binding.searchBtn,
                         "$userName has no repository",
                         Snackbar.LENGTH_SHORT
                     ).show()
                 } else {
 
-                    rv.visibility = View.VISIBLE
-                    avatarImageView.visibility = View.VISIBLE
+                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.userAvatarImageView.visibility = View.VISIBLE
 
 
-                    adapter = RecyclerViewAdapter(this, it)
-                    rv.adapter = adapter
+                    adapter = RecyclerViewAdapter(it)
+                    binding.recyclerView.adapter = adapter
                     adapter.notifyDataSetChanged()
 
 
                     Glide
                         .with(this)
-                        .load(it[0].owner.avatar_url)
+                        .load(it[0].owner.avatarUrl)
                         .centerCrop()
-                        .into(avatarImageView)
+                        .into(binding.userAvatarImageView)
 
                 }
 
             } else {
-                rv.visibility = View.INVISIBLE
-                avatarImageView.visibility = View.INVISIBLE
+                binding.recyclerView.visibility = View.INVISIBLE
+                binding.userAvatarImageView.visibility = View.INVISIBLE
 
 
                 Snackbar.make(
-                    searchBtn,
+                    binding.searchBtn,
                     "There is no user named $userName",
                     Snackbar.LENGTH_SHORT
                 ).show()

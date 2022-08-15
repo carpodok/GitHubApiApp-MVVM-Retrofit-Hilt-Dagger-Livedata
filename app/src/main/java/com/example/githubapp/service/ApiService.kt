@@ -10,5 +10,4 @@ interface ApiService {
     @GET("users/{user}/repos")
     fun getData(@Path("user") user: String): Call<List<Repo>>
 
-
 }

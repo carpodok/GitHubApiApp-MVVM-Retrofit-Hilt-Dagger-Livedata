@@ -1,7 +1,14 @@
 package com.example.githubapp.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Repo(
-    val name: String,
+
+    @SerializedName("name")
+    val repoName: String,
+
     val owner: Owner,
-    val html_url: String
+
+    @SerializedName("html_url")
+    val htmlUrl: String
 )
